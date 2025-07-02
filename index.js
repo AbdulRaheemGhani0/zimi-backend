@@ -17,11 +17,31 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
-);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://www.zimimart.online"
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+  
+  //   cors({
+//     origin: "*",
+//     credentials: true,
+//   })
+// );
 //  "https://rococo-semifreddo-a1c861.netlify.app/"
 // Connect to MongoDB
 connectDB();
